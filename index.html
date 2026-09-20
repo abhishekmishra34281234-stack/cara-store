@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Metadata for Responsive Design and Character Encoding -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cara India - Enterprise Fashion Store</title>
+
+    <!-- Google Font (Spartan / League Spartan) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spartan:wght@100;200;300;400;500;600;700;800;900&display=swap">
+    
+    <!-- Font Awesome Icons CDN (Cart, Star, Heart, Search icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ================= 1. ANNOUNCEMENT BAR (TOP SALE TICKER) ================= -->
+    <div class="top-announcement-bar">
+        <p>⚡ Festive Flash Sale Ends In: <span id="countdown-timer">08h : 42m : 19s</span> | Use Code: <strong>CARA10</strong> for Flat 10% Off</p>
+    </div>
+
+    <!-- ================= 2. HEADER & NAVIGATION ================= -->
+    <section id="header">
+        <!-- Brand Logo -->
+        <a href="#" class="brand-logo">CARA<span>.in</span></a>
+
+        <!-- Live Real-Time Search Bar -->
+        <div class="search-bar-container">
+            <input type="text" id="search-input" placeholder="Search brands, cotton tees, shirts...">
+            <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+
+        <!-- Desktop Navigation Menu -->
+        <div>
+            <ul id="navbar">
+                <li><a class="active" href="index.html">Home</a></li>
+                <li><a href="#product1">Deals</a></li>
+                <li><a href="#newsletter">Offers</a></li>
+                <li><a href="#contact-footer">Support</a></li>
+                
+                <!-- Wishlist Badge -->
+                <li id="wishlist-btn" class="nav-icon-btn" title="View Wishlist">
+                    <i class="fa-solid fa-heart"></i>
+                    <span id="wishlist-badge">0</span>
+                </li>
+
+                <!-- Sliding Cart Trigger Button -->
+                <li id="lg-bag">
+                    <button id="open-cart-btn" class="cart-trigger">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span id="cart-badge">0</span>
+                    </button>
+                </li>
+                <a href="#" id="close"><i class="fa-solid fa-xmark"></i></a>
+            </ul>
+        </div>
+
+        <!-- Mobile View Navigation Bar -->
+        <div id="mobile">
+            <button id="mobile-cart-btn" class="cart-trigger">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span id="mobile-cart-badge">0</span>
+            </button>
+            <i id="bar" class="fa-solid fa-bars"></i>
+        </div>
+    </section>
+
+    <!-- ================= 3. ADVANCED SLIDING CART DRAWER ================= -->
+    <div id="cart-overlay" class="cart-overlay"></div>
+    <div id="cart-drawer" class="cart-drawer">
+        <!-- Cart Header -->
+        <div class="cart-drawer-header">
+            <h3><i class="fa-solid fa-bag-shopping"></i> Shopping Bag</h3>
+            <button id="close-cart-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Free Delivery Gamified Progress Bar -->
+        <div class="delivery-progress-wrap">
+            <p id="delivery-progress-text">Add items worth ₹999 for <strong>FREE Delivery</strong></p>
+            <div class="progress-track">
+                <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+            </div>
+        </div>
+
+        <!-- Dynamic Cart Items Container (Injected via JS) -->
+        <div id="cart-items-container" class="cart-items-container">
+            <p class="empty-cart-msg">Your shopping cart is empty!</p>
+        </div>
+
+        <!-- Billing Calculation & Coupon Engine -->
+        <div class="cart-drawer-footer">
+            <div class="coupon-section">
+                <div class="coupon-input-group">
+                    <input type="text" id="coupon-input" placeholder="Promo Code (e.g. CARA10)">
+                    <button id="apply-coupon-btn">Apply</button>
+                </div>
+                <p id="coupon-message" class="coupon-msg"></p>
+            </div>
+
+            <div class="bill-breakdown">
+                <div class="bill-row">
+                    <span>Subtotal:</span>
+                    <span id="bill-subtotal">₹0</span>
+                </div>
+                <div class="bill-row" id="discount-row" style="display: none;">
+                    <span>Promo Discount:</span>
+                    <span id="bill-discount" class="text-green">-₹0</span>
+                </div>
+                <div class="bill-row">
+                    <span>Estimated GST (5%):</span>
+                    <span id="bill-tax">₹0</span>
+                </div>
+                <div class="bill-row">
+                    <span>Delivery Charges:</span>
+                    <span id="bill-shipping" class="text-green">FREE</span>
+                </div>
+                <div class="bill-row total-row">
+                    <span>Final Payable:</span>
+                    <span id="cart-total-price">₹0</span>
+                </div>
+            </div>
+
+            <button id="checkout-btn" class="checkout-btn">Proceed to UPI Checkout</button>
+        </div>
+    </div>
+
+    <!-- ================= 4. QUICK VIEW MODAL POPUP ================= -->
+    <div id="quickview-modal" class="modal-overlay">
+        <div class="modal-box">
+            <button id="close-modal-btn" class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-grid">
+                <div class="modal-gallery">
+                    <div class="main-img-box">
+                        <img id="modal-img" src="" alt="Product Detail">
+                    </div>
+                </div>
+                <div class="modal-details">
+                    <span id="modal-brand" class="modal-brand">BRAND</span>
+                    <h3 id="modal-title">Product Name</h3>
+                    <div class="modal-stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                        <span>(100% Genuine Certified)</span>
+                    </div>
+                    <div class="modal-price-wrap">
+                        <h2 id="modal-price">₹0</h2>
+                        <span class="tax-tag">Inclusive of all taxes</span>
+                    </div>
+                    
+                    <p id="modal-stock" class="stock-warning">⚡ Hurry, Only 3 units left in stock!</p>
+
+                    <!-- Interactive Size Pills -->
+                    <div class="size-selector">
+                        <p>Select Size (Standard Indian Fit):</p>
+                        <div class="sizes">
+                            <button class="size-pill active">S</button>
+                            <button class="size-pill">M</button>
+                            <button class="size-pill">L</button>
+                            <button class="size-pill">XL</button>
+                        </div>
+                    </div>
+
+                    <button id="modal-add-cart-btn" class="modal-cart-btn"><i class="fa-solid fa-cart-shopping"></i> Add to Bag</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 5. UPI PAYMENT SCANNER SIMULATION ================= -->
+    <div id="payment-modal" class="modal-overlay">
+        <div class="modal-box payment-box">
+            <button id="close-pay-modal" class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            <h3><i class="fa-solid fa-shield-halved"></i> Fast UPI Gateway</h3>
+            <p class="pay-sub">Scan using BHIM, PhonePe, Paytm or Google Pay</p>
+            
+            <div class="qr-placeholder">
+                <i class="fa-solid fa-qrcode"></i>
+                <div class="scanner-laser"></div>
+                <p>Merchant ID: CARA-IND-OFFICIAL</p>
+            </div>
+
+            <!-- Customer Email for Order Identification -->
+            <div style="margin-bottom: 12px; text-align: left;">
+                <label for="pay-customer-email" style="font-size: 13px; font-weight: 600; color: #555;">Delivery / Receipt Email:</label>
+                <input type="email" id="pay-customer-email" placeholder="Enter your email" value="customer@cara.com" style="width: 100%; padding: 8px 12px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px;">
+            </div>
+            
+            <div class="pay-amount-box">
+                <span>Total Amount:</span>
+                <strong id="pay-total-amount">₹0</strong>
+            </div>
+
+            <button id="confirm-payment-btn" class="confirm-pay-btn">Simulate Payment Success</button>
+        </div>
+    </div>
+
+    <!-- ================= 6. HERO SECTION ================= -->
+    <section id="hero">
+        <div class="hero-content">
+            <span class="sale-badge">BIG BILLION FASHION CARNIVAL</span>
+            <h2>Grand Festive Deals</h2>
+            <h1>Flat 70% Off + Instant ₹500 Cashback</h1>
+            <p>India's trusted fashion platform. High performance fabrics tailored for daily wear.</p>
+            <a href="#product1" class="hero-btn">Shop Verified Deals <i class="fa-solid fa-arrow-down"></i></a>
+        </div>
+    </section>
+
+    <!-- ================= 7. CONTROLS BAR (FILTERS & SORTING) ================= -->
+    <div class="controls-bar">
+        <div class="filter-wrapper">
+            <button class="filter-btn active" data-category="all">All Styles</button>
+            <button class="filter-btn" data-category="tshirt">T-Shirts</button>
+            <button class="filter-btn" data-category="shirt">Shirts</button>
+        </div>
+
+        <div class="sort-wrapper">
+            <label for="sort-select">Sort By: </label>
+            <select id="sort-select">
+                <option value="default">Featured Picks</option>
+                <option value="low-to-high">Price: Low to High</option>
+                <option value="high-to-low">Price: High to Low</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ================= 8. FEATURE HIGHLIGHTS ================= -->
+    <section id="feature" class="section-p1">
+        <div class="fe-box f-1">
+            <i class="fa-solid fa-truck-fast"></i>
+            <h6>Free Shipping</h6>
+        </div>
+        <div class="fe-box f-2">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <h6>7-Day Returns</h6>
+        </div>
+        <div class="fe-box f-3">
+            <i class="fa-solid fa-piggy-bank"></i>
+            <h6>Best Value</h6>
+        </div>
+        <div class="fe-box f-4">
+            <i class="fa-solid fa-tags"></i>
+            <h6>Bank Coupons</h6>
+        </div>
+        <div class="fe-box f-5">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h6>100% Original</h6>
+        </div>
+        <div class="fe-box f-6">
+            <i class="fa-solid fa-headset"></i>
+            <h6>24x7 Support</h6>
+        </div>
+    </section>
+
+    <!-- ================= 9. PRODUCT GRID ================= -->
+    <section id="product1" class="section-p1">
+        <div class="section-header">
+            <h2>Trending Deals of the Day</h2>
+            <p>Click on any photo to inspect high resolution details</p>
+        </div>
+        
+        <!-- JavaScript injects dynamic products here -->
+        <div class="pro-container" id="products-grid"></div>
+    </section>
+
+    <!-- ================= 10. CALL TO ACTION BANNER ================= -->
+    <section id="banner" class="section-m1">
+        <h4>Instant Banking Discount</h4>
+        <h2>Flat <span>₹500 Instant Cashback</span> on HDFC, SBI & ICICI Cards</h2>
+        <button class="normal">Claim Bank Offer</button>
+    </section>
+
+    <!-- ================= 11. NEWSLETTER ================= -->
+    <section id="newsletter" class="section-p1 section-m1">
+        <div class="newstext">
+            <h4>Join Cara VIP Club</h4>
+            <p>Get instant price-drop alerts & secret promo codes directly in your inbox.</p>
+        </div>
+        <div class="form">
+            <input type="email" id="newsletter-input" placeholder="Enter your email address">
+            <button class="normal" id="newsletter-btn">Subscribe</button>
+        </div>
+    </section>
+
+    <!-- ================= 12. ENTERPRISE FOOTER ================= -->
+    <footer id="contact-footer" class="section-p1">
+        <div class="col">
+            <h2 class="brand-logo footer-logo">CARA<span>.in</span></h2>
+            <h4>Official Support & Contact</h4>
+            <p><strong>Corporate HQ:</strong> Cyber Heights, Vibhuti Khand, Gomti Nagar, Lucknow, Uttar Pradesh - 226010</p>
+            <p><strong>Direct Helpline:</strong> 1800 123 4567 (Toll-Free, 24x7)</p>
+            <p><strong>Customer Support:</strong> support@cara.in</p>
+            <p><strong>Lead Developer:</strong> <a href="mailto:abhishekmishra34281234@gmail.com" style="color: #2874f0; font-weight: 700;">abhishekmishra34281234@gmail.com</a></p>
+            <div class="follow">
+                <h4>Connect With Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <h4>About Cara</h4>
+            <a href="#">Company Profile</a>
+            <a href="#">Cara Express Logistics</a>
+            <a href="#">Privacy & Security Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Careers @ Cara</a>
+        </div>
+
+        <div class="col">
+            <h4>Support Services</h4>
+            <a href="#">My Profile & Settings</a>
+            <a href="#">Real-Time Order Tracking</a>
+            <a href="#">Doorstep Replacement</a>
+            <a href="#">UPI Fraud Prevention</a>
+            <a href="#">Help & FAQs</a>
+        </div>
+
+        <div class="col install">
+            <h4>Encrypted Transactions</h4>
+            <p>Certified 256-Bit SSL Payment Gateways:</p>
+            <div class="payment-badges">
+                <span><i class="fa-solid fa-qrcode"></i> UPI</span>
+                <span><i class="fa-brands fa-google-pay"></i> G-Pay</span>
+                <span><i class="fa-brands fa-cc-visa"></i> VISA</span>
+                <span><i class="fa-brands fa-cc-mastercard"></i> Rupay</span>
+                <span><i class="fa-solid fa-money-bill-1-wave"></i> COD</span>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>© 2026, Cara India Online Shopping Pvt. Ltd. | Designed & Developed by Abhishek Mishra | Lucknow, UP</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Banner -->
+    <div id="toast" class="toast">Action completed!</div>
+
+    <!-- External JavaScript File -->
+    <script src="script.js"></script>
+</body>
+</html>
