@@ -10,8 +10,10 @@ const products = [
     { id: 8, name: "Cat Pattern Linen Blouse", price: 499, image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500&auto=format&fit=crop&q=60", brand: "adidas" }
 ];
 
-// Cart State (Stored in LocalStorage)
+// Cart State & Active Modal Product
 let cart = JSON.parse(localStorage.getItem('cara_cart')) || [];
+let currentModalProductId = null;
+let currentSelectedSize = "S";
 
 // 1. Render Products onto HTML Grid
 function renderProducts() {
@@ -20,8 +22,8 @@ function renderProducts() {
 
     container.innerHTML = products.map(product => `
         <div class="pro">
-            <img src="${product.image}" alt="${product.name}">
-            <div class="des">
+            <img src="${product.image}" alt="${product.name}" onclick="openQuickView(${product.id})" style="cursor: pointer;">
+            <div class="des" onclick="openQuickView(${product.id})" style="cursor: pointer;">
                 <span>${product.brand}</span>
                 <h5>${product.name}</h5>
                 <div class="star">
@@ -40,31 +42,59 @@ function renderProducts() {
     `).join('');
 }
 
-// 2. Add Item to Cart
-function addToCart(productId) {
+// 2. Open Quick View Modal on Image Tap
+function openQuickView(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
 
-    const existingItem = cart.find(item => item.id === productId);
+    currentModalProductId = productId;
+    currentSelectedSize = "S";
+
+    const modal = document.getElementById('quickview-modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBrand = document.getElementById('modal-brand');
+    const modalPrice = document.getElementById('modal-price');
+
+    if (modalImg) modalImg.src = product.image;
+    if (modalTitle) modalTitle.innerText = product.name;
+    if (modalBrand) modalBrand.innerText = product.brand.toUpperCase();
+    if (modalPrice) modalPrice.innerText = `₹${product.price}`;
+
+    // Reset active size button to 'S'
+    document.querySelectorAll('.size-pill').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.innerText.trim() === 'S') btn.classList.add('active');
+    });
+
+    if (modal) modal.style.display = 'flex';
+}
+
+// 3. Add Item to Cart
+function addToCart(productId, size = "M") {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    const existingItem = cart.find(item => item.id === productId && item.size === size);
 
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
-        cart.push({ ...product, quantity: 1 });
+        cart.push({ ...product, size: size, quantity: 1 });
     }
 
     updateCart();
-    showNotification(`${product.name} added to bag!`);
+    showNotification(`${product.name} (${size}) added to bag!`);
 }
 
-// 3. Update Cart State & Sync
+// 4. Update Cart State & Sync
 function updateCart() {
     localStorage.setItem('cara_cart', JSON.stringify(cart));
     updateCartCount();
     renderCartDrawer();
 }
 
-// 4. Cart Icon Badge Synchronizer (Desktop & Mobile)
+// 5. Cart Icon Badge Synchronizer (Desktop & Mobile)
 function updateCartCount() {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     
@@ -77,7 +107,7 @@ function updateCartCount() {
     if (badgeCount) badgeCount.innerText = totalItems;
 }
 
-// 5. Render Items in Cart Drawer / Modal
+// 6. Render Items in Cart Drawer / Modal
 function renderCartDrawer() {
     const container = document.getElementById('cart-items-container');
     const subtotalEl = document.getElementById('bill-subtotal');
@@ -103,7 +133,7 @@ function renderCartDrawer() {
                 <img src="${item.image}" alt="${item.name}" style="width: 45px; height: 50px; object-fit: cover; border-radius: 4px;">
                 <div style="flex: 1; margin-left: 10px; font-size: 13px;">
                     <div style="font-weight: 600;">${item.name}</div>
-                    <div style="color: #666;">₹${item.price} × ${item.quantity} = <strong>₹${itemTotal}</strong></div>
+                    <div style="color: #666; font-size: 12px;">Size: <strong>${item.size || 'M'}</strong> | ₹${item.price} × ${item.quantity} = <strong>₹${itemTotal}</strong></div>
                 </div>
                 <button onclick="removeFromCart(${index})" style="background: none; border: none; color: #ff5252; cursor: pointer; font-size: 16px;">
                     <i class="fa-solid fa-trash"></i>
@@ -122,13 +152,13 @@ function renderCartDrawer() {
     if (payTotalAmount) payTotalAmount.innerText = `₹${finalTotal}`;
 }
 
-// 6. Remove Item from Cart
+// 7. Remove Item from Cart
 function removeFromCart(index) {
     cart.splice(index, 1);
     updateCart();
 }
 
-// 7. Backend Live Cloud Database Order Checkout
+// 8. Backend Live Cloud Database Order Checkout
 async function checkoutOrder() {
     if (cart.length === 0) {
         alert("Aapka bag khali hai! Pehle kuch add kijiye.");
@@ -175,7 +205,7 @@ async function checkoutOrder() {
     }
 }
 
-// 8. Visual Toast Feedback
+// 9. Visual Toast Feedback
 function showNotification(msg) {
     const toast = document.getElementById('toast');
     if (toast) {
@@ -187,10 +217,40 @@ function showNotification(msg) {
     }
 }
 
-// 9. Initial Page Mount Listeners
+// 10. Initial Page Mount Listeners
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
     updateCart();
+
+    // Size Pill Click Handlers
+    document.querySelectorAll('.size-pill').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.size-pill').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentSelectedSize = e.target.innerText.trim();
+        });
+    });
+
+    // Modal Add to Bag Button
+    const modalAddCartBtn = document.getElementById('modal-add-cart-btn');
+    if (modalAddCartBtn) {
+        modalAddCartBtn.addEventListener('click', () => {
+            if (currentModalProductId) {
+                addToCart(currentModalProductId, currentSelectedSize);
+                const modal = document.getElementById('quickview-modal');
+                if (modal) modal.style.display = 'none';
+            }
+        });
+    }
+
+    // Modal Close Button
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => {
+            const modal = document.getElementById('quickview-modal');
+            if (modal) modal.style.display = 'none';
+        });
+    }
 
     // Sliding Cart Open/Close Handlers
     const openCartBtn = document.getElementById('open-cart-btn');
