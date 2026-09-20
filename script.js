@@ -1,279 +1,191 @@
-// ==========================================
-// 1. DUMMY PRODUCTS DATA
-// ==========================================
+// Product Data
 const products = [
-    {
-        id: 1,
-        brand: "PETER ENGLAND",
-        name: "Classic Cotton White T-Shirt",
-        price: 699,
-        originalPrice: 1299,
-        category: "tshirt",
-        rating: 4.5,
-        img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500"
-    },
-    {
-        id: 2,
-        brand: "ROADSTER",
-        name: "Hawaiian Summer Floral Shirt",
-        price: 999,
-        originalPrice: 1999,
-        category: "shirt",
-        rating: 4.8,
-        img: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500"
-    },
-    {
-        id: 3,
-        brand: "BEWAKOOFS",
-        name: "Oversized Streetwear Graphic Tee",
-        price: 799,
-        originalPrice: 1499,
-        category: "tshirt",
-        rating: 4.2,
-        img: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500"
-    },
-    {
-        id: 4,
-        brand: "RAYMOND",
-        name: "Slim Fit Casual Oxford Shirt",
-        price: 1299,
-        originalPrice: 2499,
-        category: "shirt",
-        rating: 4.7,
-        img: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500"
-    }
+    { id: 1, name: "Cartoon Astronaut T-Shirt", price: 499, image: "https://i.postimg.cc/850xMZ64/f1.jpg", brand: "adidas" },
+    { id: 2, name: "Tropical Print Hawaiian Shirt", price: 699, image: "https://i.postimg.cc/BvY78kZj/f2.jpg", brand: "adidas" },
+    { id: 3, name: "Vintage Floral Summer Shirt", price: 599, image: "https://i.postimg.cc/4442Wj27/f3.jpg", brand: "adidas" },
+    { id: 4, name: "White Floral Casual Shirt", price: 549, image: "https://i.postimg.cc/2jh40xMw/f4.jpg", brand: "adidas" },
+    { id: 5, name: "Navy Blue Floral Print Shirt", price: 649, image: "https://i.postimg.cc/mDybvN2n/f5.jpg", brand: "adidas" },
+    { id: 6, name: "Corduroy Dual Pocket Jacket", price: 1299, image: "https://i.postimg.cc/kgvW302W/f6.jpg", brand: "adidas" },
+    { id: 7, name: "Casual Khaki Chino Pants", price: 899, image: "https://i.postimg.cc/8zDx4Mct/f7.jpg", brand: "adidas" },
+    { id: 8, name: "Cat Pattern Linen Blouse", price: 499, image: "https://i.postimg.cc/90Gvj8r5/f8.jpg", brand: "adidas" }
 ];
 
-// App State
-let cart = JSON.parse(localStorage.getItem('cart')) || [
-    { id: 1, name: "Classic Cotton White T-Shirt", price: 699, quantity: 1 }
-];
-let wishlistCount = 0;
-let discountPercent = 0;
+// Cart State
+let cart = JSON.parse(localStorage.getItem('cara_cart')) || [];
 
-// ==========================================
-// 2. RENDER PRODUCTS
-// ==========================================
-function renderProducts(itemsToRender) {
-    const grid = document.getElementById('products-grid');
-    if (!grid) return;
+// Render Products
+function renderProducts() {
+    const container = document.getElementById('product-container');
+    if (!container) return;
 
-    grid.innerHTML = itemsToRender.map(p => `
-        <div class="pro" data-id="${p.id}">
-            <img src="${p.img}" alt="${p.name}" class="pro-img" onclick="openQuickView(${p.id})">
+    container.innerHTML = products.map(product => `
+        <div class="pro">
+            <img src="${product.image}" alt="${product.name}">
             <div class="des">
-                <span>${p.brand}</span>
-                <h5>${p.name}</h5>
+                <span>${product.brand}</span>
+                <h5>${product.name}</h5>
                 <div class="star">
-                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
                 </div>
-                <h4>₹${p.price} <del>₹${p.originalPrice}</del></h4>
+                <h4>₹${product.price}</h4>
             </div>
-            <button class="cart-add-btn" onclick="addToCart(${p.id})">
-                <i class="fa-solid fa-cart-shopping"></i> Add
-            </button>
+            <a href="javascript:void(0)" onclick="addToCart(${product.id})" class="cart-btn"><i class="fal fa-shopping-cart cart"></i></a>
         </div>
     `).join('');
 }
 
-// ==========================================
-// 3. CART SYSTEM & UI UPDATE
-// ==========================================
-function updateCartUI() {
-    const badge = document.getElementById('cart-badge');
-    const mobBadge = document.getElementById('mobile-cart-badge');
-    const itemsContainer = document.getElementById('cart-items-container');
-    const subtotalEl = document.getElementById('bill-subtotal');
-    const taxEl = document.getElementById('bill-tax');
-    const totalEl = document.getElementById('cart-total-price');
-    const payTotalEl = document.getElementById('pay-total-amount');
+// Add to Cart Function
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    const existingItem = cart.find(item => item.id === productId);
 
-    const totalItems = cart.reduce((acc, i) => acc + i.quantity, 0);
-    if (badge) badge.innerText = totalItems;
-    if (mobBadge) mobBadge.innerText = totalItems;
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ ...product, quantity: 1 });
+    }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+    showNotification(`${product.name} cart me add ho gaya!`);
+}
 
-    if (!itemsContainer) return;
+// Update Cart State & LocalStorage
+function updateCart() {
+    localStorage.setItem('cara_cart', JSON.stringify(cart));
+    updateCartCount();
+    renderCartTable();
+}
+
+// Cart Icon Badge Counter
+function updateCartCount() {
+    const badge = document.getElementById('cart-count');
+    if (badge) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        badge.innerText = totalItems;
+    }
+}
+
+// Render Cart Table on Cart Page / Modal
+function renderCartTable() {
+    const tbody = document.getElementById('cart-items');
+    const totalEl = document.getElementById('cart-subtotal');
+    if (!tbody) return;
 
     if (cart.length === 0) {
-        itemsContainer.innerHTML = '<p class="empty-cart-msg">Your shopping cart is empty!</p>';
-        if (subtotalEl) subtotalEl.innerText = "₹0";
-        if (taxEl) taxEl.innerText = "₹0";
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Aapka Cart Khali Hai!</td></tr>`;
         if (totalEl) totalEl.innerText = "₹0";
-        if (payTotalEl) payTotalEl.innerText = "₹0";
         return;
     }
 
-    itemsContainer.innerHTML = cart.map((item, idx) => `
-        <div class="cart-drawer-item" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:8px;">
-            <div>
-                <p style="font-weight:600; margin:0; font-size:14px;">${item.name}</p>
-                <small style="color:#666;">₹${item.price} x ${item.quantity}</small>
-            </div>
-            <button onclick="removeFromCart(${idx})" style="border:none; background:none; color:red; cursor:pointer;">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        </div>
-    `).join('');
+    let subtotal = 0;
+    tbody.innerHTML = cart.map((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        return `
+            <tr>
+                <td><a href="javascript:void(0)" onclick="removeFromCart(${index})"><i class="far fa-times-circle"></i></a></td>
+                <td><img src="${item.image}" alt="" style="width: 50px;"></td>
+                <td>${item.name}</td>
+                <td>₹${item.price}</td>
+                <td><input type="number" value="${item.quantity}" min="1" onchange="changeQuantity(${index}, this.value)" style="width: 50px;"></td>
+                <td>₹${itemTotal}</td>
+            </tr>
+        `;
+    }).join('');
 
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const tax = Math.round(subtotal * 0.05);
-    const discount = Math.round(subtotal * (discountPercent / 100));
-    const finalPayable = subtotal - discount + tax + (subtotal > 999 ? 0 : 70);
-
-    if (subtotalEl) subtotalEl.innerText = `₹${subtotal}`;
-    if (taxEl) taxEl.innerText = `₹${tax}`;
-    if (totalEl) totalEl.innerText = `₹${finalPayable}`;
-    if (payTotalEl) payTotalEl.innerText = `₹${finalPayable}`;
+    if (totalEl) totalEl.innerText = `₹${subtotal}`;
 }
 
-window.addToCart = function(productId) {
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-
-    const existing = cart.find(item => item.id === productId);
-    if (existing) {
-        existing.quantity += 1;
+// Quantity Change
+function changeQuantity(index, newQty) {
+    const qty = parseInt(newQty);
+    if (qty > 0) {
+        cart[index].quantity = qty;
     } else {
-        cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1 });
+        cart.splice(index, 1);
     }
-    updateCartUI();
-    toggleCartDrawer(true);
-};
-
-window.removeFromCart = function(index) {
-    cart.splice(index, 1);
-    updateCartUI();
-};
-
-// ==========================================
-// 4. DRAWER & MODAL TOGGLES
-// ==========================================
-function toggleCartDrawer(show) {
-    const drawer = document.getElementById('cart-drawer');
-    const overlay = document.getElementById('cart-overlay');
-    if (drawer && overlay) {
-        if (show) {
-            drawer.classList.add('active');
-            overlay.classList.add('active');
-        } else {
-            drawer.classList.remove('active');
-            overlay.classList.remove('active');
-        }
-    }
+    updateCart();
 }
 
-window.openQuickView = function(productId) {
-    const prod = products.find(p => p.id === productId);
-    if (!prod) return;
+// Remove Single Item
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCart();
+}
 
-    document.getElementById('modal-img').src = prod.img;
-    document.getElementById('modal-brand').innerText = prod.brand;
-    document.getElementById('modal-title').innerText = prod.name;
-    document.getElementById('modal-price').innerText = `₹${prod.price}`;
+// Live Backend Database Checkout Integration
+async function checkoutOrder() {
+    if (cart.length === 0) {
+        alert("Aapka cart khali hai! Pehle product add kijiye.");
+        return;
+    }
 
-    const addBtn = document.getElementById('modal-add-cart-btn');
-    addBtn.onclick = () => {
-        addToCart(prod.id);
-        document.getElementById('quickview-modal').style.display = 'none';
+    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const orderData = {
+        orderId: "ORD-" + Date.now(),
+        customerEmail: "customer@cara.com",
+        items: cart,
+        totalAmount: totalAmount
     };
 
-    document.getElementById('quickview-modal').style.display = 'flex';
-};
-
-// ==========================================
-// 5. EVENT LISTENERS SETUP
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    renderProducts(products);
-    updateCartUI();
-
-    // Sliding Cart Open/Close
-    document.getElementById('open-cart-btn')?.addEventListener('click', () => toggleCartDrawer(true));
-    document.getElementById('mobile-cart-btn')?.addEventListener('click', () => toggleCartDrawer(true));
-    document.getElementById('close-cart-btn')?.addEventListener('click', () => toggleCartDrawer(false));
-    document.getElementById('cart-overlay')?.addEventListener('click', () => toggleCartDrawer(false));
-
-    // Close Modals
-    document.getElementById('close-modal-btn')?.addEventListener('click', () => {
-        document.getElementById('quickview-modal').style.display = 'none';
-    });
-
-    document.getElementById('close-pay-modal')?.addEventListener('click', () => {
-        document.getElementById('payment-modal').style.display = 'none';
-    });
-
-    // Proceed to UPI Button
-    document.getElementById('checkout-btn')?.addEventListener('click', () => {
-        if (cart.length === 0) {
-            alert("Aapka shopping bag khali hai!");
-            return;
-        }
-        toggleCartDrawer(false);
-        document.getElementById('payment-modal').style.display = 'flex';
-    });
-
-    // Coupon Code Apply
-    document.getElementById('apply-coupon-btn')?.addEventListener('click', () => {
-        const input = document.getElementById('coupon-input').value.trim();
-        const msg = document.getElementById('coupon-message');
-        if (input.toUpperCase() === 'CARA10') {
-            discountPercent = 10;
-            msg.style.color = 'green';
-            msg.innerText = 'Promo applied: 10% Discount!';
-            document.getElementById('discount-row').style.display = 'flex';
-            updateCartUI();
-        } else {
-            msg.style.color = 'red';
-            msg.innerText = 'Invalid Promo Code!';
-        }
-    });
-
-    // ==========================================
-    // 6. LIVE BACKEND & MONGODB ATLAS ORDER SAVE
-    // ==========================================
-    const confirmPayBtn = document.getElementById('confirm-payment-btn');
-    if (confirmPayBtn) {
-        confirmPayBtn.addEventListener('click', async () => {
-            const rawPrice = document.getElementById('pay-total-amount')?.innerText || "0";
-            const amount = parseInt(rawPrice.replace(/[^0-9]/g, '')) || 804;
-            const customerEmail = document.getElementById('pay-customer-email')?.value.trim() || "customer@cara.com";
-
-            confirmPayBtn.innerText = "Processing...";
-            confirmPayBtn.disabled = true;
-
-            const orderPayload = {
-                orderId: "CARA-" + Math.floor(100000 + Math.random() * 900000),
-                customerEmail: customerEmail,
-                items: cart.length > 0 ? cart : [{ name: "Classic Cotton White T-Shirt", price: 699, quantity: 1 }],
-                totalAmount: amount
-            };
-
-            try {
-                const response = await fetch("http://localhost:5000/api/orders", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(orderPayload)
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    alert(`🎉 Order Placed Successfully!\nSaved in MongoDB Atlas!\nOrder ID: ${orderPayload.orderId}`);
-                    cart = [];
-                    updateCartUI();
-                    document.getElementById('payment-modal').style.display = 'none';
-                } else {
-                    alert("Order save nahi ho paya!");
-                }
-            } catch (err) {
-                console.error("Database connection error:", err);
-                alert("❌ Backend se connection fail hua! Terminal me 'node server.js' verify karein.");
-            } finally {
-                confirmPayBtn.innerText = "Simulate Payment Success";
-                confirmPayBtn.disabled = false;
-            }
+    try {
+        // Render Live Cloud Backend URL
+        const response = await fetch('https://cara-store-fdui.onrender.com/api/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
         });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert(`🎉 Payment & Order Successful!\nOrder ID: ${orderData.orderId}\nData MongoDB Atlas cloud database me save ho gaya.`);
+            cart = [];
+            updateCart();
+        } else {
+            alert("Order save karne me problem aayi: " + result.error);
+        }
+    } catch (error) {
+        console.error("Checkout Error:", error);
+        alert("Server connect nahi ho paya. Render backend chalu ho raha hai, 30 seconds baad dobara try karein.");
+    }
+}
+
+// Simple Toast Notification
+function showNotification(msg) {
+    const toast = document.createElement('div');
+    toast.innerText = msg;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.backgroundColor = '#088178';
+    toast.style.color = '#fff';
+    toast.style.padding = '12px 20px';
+    toast.style.borderRadius = '5px';
+    toast.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+    toast.style.zIndex = '1000';
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 2500);
+}
+
+// Initial Load
+document.addEventListener('DOMContentLoaded', () => {
+    renderProducts();
+    updateCartCount();
+    renderCartTable();
+
+    // Checkout button listener
+    const checkoutBtn = document.getElementById('checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', checkoutOrder);
     }
 });
