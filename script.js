@@ -1,13 +1,13 @@
-// Product Data (Local Project Images)
+// Product Data (High-Quality Direct Cloud CDN Images)
 const products = [
-    { id: 1, name: "Cartoon Astronaut T-Shirt", price: 499, image: "img/products/f1.jpg", brand: "adidas" },
-    { id: 2, name: "Tropical Print Hawaiian Shirt", price: 699, image: "img/products/f2.jpg", brand: "adidas" },
-    { id: 3, name: "Vintage Floral Summer Shirt", price: 599, image: "img/products/f3.jpg", brand: "adidas" },
-    { id: 4, name: "White Floral Casual Shirt", price: 549, image: "img/products/f4.jpg", brand: "adidas" },
-    { id: 5, name: "Navy Blue Floral Print Shirt", price: 649, image: "img/products/f5.jpg", brand: "adidas" },
-    { id: 6, name: "Corduroy Dual Pocket Jacket", price: 1299, image: "img/products/f6.jpg", brand: "adidas" },
-    { id: 7, name: "Casual Khaki Chino Pants", price: 899, image: "img/products/f7.jpg", brand: "adidas" },
-    { id: 8, name: "Cat Pattern Linen Blouse", price: 499, image: "img/products/f8.jpg", brand: "adidas" }
+    { id: 1, name: "Cartoon Astronaut T-Shirt", price: 499, image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop&q=60", brand: "adidas" },
+    { id: 2, name: "Tropical Print Hawaiian Shirt", price: 699, image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500&auto=format&fit=crop&q=60", brand: "adidas" },
+    { id: 3, name: "Vintage Floral Summer Shirt", price: 599, image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500&auto=format&fit=crop&q=60", brand: "adidas" },
+    { id: 4, name: "White Floral Casual Shirt", price: 549, image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=500&auto=format&fit=crop&q=60", brand: "adidas" },
+    { id: 5, name: "Navy Blue Floral Print Shirt", price: 649, image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=500&auto=format&fit=crop&q=60", brand: "adidas" },
+    { id: 6, name: "Corduroy Dual Pocket Jacket", price: 1299, image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&auto=format&fit=crop&q=60", brand: "adidas" },
+    { id: 7, name: "Casual Khaki Chino Pants", price: 899, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500&auto=format&fit=crop&q=60", brand: "adidas" },
+    { id: 8, name: "Cat Pattern Linen Blouse", price: 499, image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500&auto=format&fit=crop&q=60", brand: "adidas" }
 ];
 
 // Cart State (Stored in LocalStorage)
@@ -20,7 +20,7 @@ function renderProducts() {
 
     container.innerHTML = products.map(product => `
         <div class="pro">
-            <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300x350?text=Cara+Fashion'">
+            <img src="${product.image}" alt="${product.name}">
             <div class="des">
                 <span>${product.brand}</span>
                 <h5>${product.name}</h5>
@@ -100,7 +100,7 @@ function renderCartDrawer() {
         subtotal += itemTotal;
         return `
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                <img src="${item.image}" alt="${item.name}" style="width: 45px; height: 50px; object-fit: cover; border-radius: 4px;" onerror="this.src='https://via.placeholder.com/50'">
+                <img src="${item.image}" alt="${item.name}" style="width: 45px; height: 50px; object-fit: cover; border-radius: 4px;">
                 <div style="flex: 1; margin-left: 10px; font-size: 13px;">
                     <div style="font-weight: 600;">${item.name}</div>
                     <div style="color: #666;">₹${item.price} × ${item.quantity} = <strong>₹${itemTotal}</strong></div>
