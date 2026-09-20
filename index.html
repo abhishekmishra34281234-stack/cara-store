@@ -128,57 +128,57 @@
     </div>
 
     <!-- ================= 4. QUICK VIEW MODAL POPUP ================= -->
-    <div id="quickview-modal" class="modal-overlay">
-        <div class="modal-box">
-            <button id="close-modal-btn" class="close-modal"><i class="fa-solid fa-xmark"></i></button>
-            <div class="modal-grid">
-                <div class="modal-gallery">
+    <div id="quickview-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center;">
+        <div class="modal-box" style="background: #fff; padding: 25px; border-radius: 12px; max-width: 600px; width: 90%; position: relative; max-height: 90vh; overflow-y: auto;">
+            <button id="close-modal-btn" class="close-modal" style="position: absolute; right: 15px; top: 15px; background: none; border: none; font-size: 20px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-grid" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="modal-gallery" style="flex: 1; min-width: 200px;">
                     <div class="main-img-box">
-                        <img id="modal-img" src="" alt="Product Detail">
+                        <img id="modal-img" src="" alt="Product Detail" style="width: 100%; border-radius: 8px; object-fit: cover;">
                     </div>
                 </div>
-                <div class="modal-details">
-                    <span id="modal-brand" class="modal-brand">BRAND</span>
-                    <h3 id="modal-title">Product Name</h3>
-                    <div class="modal-stars">
+                <div class="modal-details" style="flex: 1.2; min-width: 220px; text-align: left;">
+                    <span id="modal-brand" class="modal-brand" style="color: #666; font-size: 13px; font-weight: 700; text-transform: uppercase;">BRAND</span>
+                    <h3 id="modal-title" style="margin: 6px 0 10px; font-size: 18px;">Product Name</h3>
+                    <div class="modal-stars" style="color: #f3b519; margin-bottom: 10px; font-size: 13px;">
                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                        <span>(100% Genuine Certified)</span>
+                        <span style="color: #088178; font-weight: 600; font-size: 12px; margin-left: 5px;">(100% Genuine)</span>
                     </div>
-                    <div class="modal-price-wrap">
-                        <h2 id="modal-price">₹0</h2>
-                        <span class="tax-tag">Inclusive of all taxes</span>
+                    <div class="modal-price-wrap" style="margin-bottom: 12px;">
+                        <h2 id="modal-price" style="color: #088178; margin: 0; font-size: 24px;">₹0</h2>
+                        <span class="tax-tag" style="font-size: 11px; color: #888;">Inclusive of all taxes</span>
                     </div>
                     
-                    <p id="modal-stock" class="stock-warning">⚡ Hurry, Only 3 units left in stock!</p>
-
                     <!-- Interactive Size Pills -->
-                    <div class="size-selector">
-                        <p>Select Size (Standard Indian Fit):</p>
-                        <div class="sizes">
-                            <button class="size-pill active">S</button>
-                            <button class="size-pill">M</button>
-                            <button class="size-pill">L</button>
-                            <button class="size-pill">XL</button>
+                    <div class="size-selector" style="margin: 15px 0;">
+                        <p style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Select Size:</p>
+                        <div class="sizes" style="display: flex; gap: 8px;">
+                            <button type="button" class="size-pill active" style="padding: 6px 14px; border: 1px solid #088178; background: #088178; color: #fff; border-radius: 4px; cursor: pointer; font-weight: 600;">S</button>
+                            <button type="button" class="size-pill" style="padding: 6px 14px; border: 1px solid #ccc; background: #fff; color: #333; border-radius: 4px; cursor: pointer; font-weight: 600;">M</button>
+                            <button type="button" class="size-pill" style="padding: 6px 14px; border: 1px solid #ccc; background: #fff; color: #333; border-radius: 4px; cursor: pointer; font-weight: 600;">L</button>
+                            <button type="button" class="size-pill" style="padding: 6px 14px; border: 1px solid #ccc; background: #fff; color: #333; border-radius: 4px; cursor: pointer; font-weight: 600;">XL</button>
                         </div>
                     </div>
 
-                    <button id="modal-add-cart-btn" class="modal-cart-btn"><i class="fa-solid fa-cart-shopping"></i> Add to Bag</button>
+                    <button id="modal-add-cart-btn" class="modal-cart-btn" style="width: 100%; padding: 12px; background: #088178; color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 15px; margin-top: 10px;">
+                        <i class="fa-solid fa-cart-shopping"></i> Add to Bag
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ================= 5. UPI PAYMENT SCANNER SIMULATION ================= -->
-    <div id="payment-modal" class="modal-overlay">
-        <div class="modal-box payment-box">
-            <button id="close-pay-modal" class="close-modal"><i class="fa-solid fa-xmark"></i></button>
+    <div id="payment-modal" class="modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center;">
+        <div class="modal-box payment-box" style="background: #fff; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; position: relative; text-align: center;">
+            <button id="close-pay-modal" class="close-modal" style="position: absolute; right: 15px; top: 15px; background: none; border: none; font-size: 20px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
             <h3><i class="fa-solid fa-shield-halved"></i> Fast UPI Gateway</h3>
-            <p class="pay-sub">Scan using BHIM, PhonePe, Paytm or Google Pay</p>
+            <p class="pay-sub" style="font-size: 13px; color: #666; margin-bottom: 15px;">Scan using BHIM, PhonePe, Paytm or Google Pay</p>
             
-            <div class="qr-placeholder">
-                <i class="fa-solid fa-qrcode"></i>
+            <div class="qr-placeholder" style="border: 2px dashed #088178; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                <i class="fa-solid fa-qrcode" style="font-size: 80px; color: #333;"></i>
                 <div class="scanner-laser"></div>
-                <p>Merchant ID: CARA-IND-OFFICIAL</p>
+                <p style="font-size: 12px; color: #777; margin-top: 8px;">Merchant ID: CARA-IND-OFFICIAL</p>
             </div>
 
             <!-- Customer Email for Order Identification -->
@@ -187,12 +187,14 @@
                 <input type="email" id="pay-customer-email" placeholder="Enter your email" value="customer@cara.com" style="width: 100%; padding: 8px 12px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px;">
             </div>
             
-            <div class="pay-amount-box">
-                <span>Total Amount:</span>
-                <strong id="pay-total-amount">₹0</strong>
+            <div class="pay-amount-box" style="margin-bottom: 15px; font-size: 16px;">
+                <span>Total Amount: </span>
+                <strong id="pay-total-amount" style="color: #088178; font-size: 20px;">₹0</strong>
             </div>
 
-            <button id="confirm-payment-btn" class="confirm-pay-btn">Simulate Payment Success</button>
+            <button id="confirm-payment-btn" class="confirm-pay-btn" style="width: 100%; padding: 12px; background: #088178; color: #fff; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 15px;">
+                Simulate Payment Success
+            </button>
         </div>
     </div>
 
